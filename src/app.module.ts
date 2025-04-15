@@ -10,6 +10,7 @@ import { AuthsModule } from './auths/auths.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
 import { SuccessResponseFilter } from './utils/success-response.filter';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { SuccessResponseFilter } from './utils/success-response.filter';
     }),
     UsersModule,
     AuthsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [
