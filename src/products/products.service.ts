@@ -6,12 +6,16 @@ import { StyleTypes } from './enum/styleTypes.enum';
 import { Product } from './entity/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { ProductDto } from './dto/add-product.dto';
+import { Image } from './entity/image.entity';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    @InjectRepository(Image)
+    private imagesRepository: Repository<Image>,
   ) {}
 
   async getAllBrandTypes(): Promise<EnumDto[]> {
@@ -66,6 +70,43 @@ export class ProductsService {
       });
 
       return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async addProduct(dto: ProductDto): Promise<Product | any> {
+    try {
+      const addProductDao: Product = {
+        productName: dto.productName,
+        productDescription: dto.productDescription,
+        productBrand: dto.productBrand,
+        status: dto.status,
+        productCategory: dto.productCategory,
+        price: dto.price,
+        productStyle: dto.productStyle,
+        weight: dto.weight,
+        images: [],
+      };
+
+      const res = await this.productsRepository.save(addProductDao);
+
+      for (const image of dto.images as any) {
+        let imageDao: Image = {
+          product: res,
+          url: image,
+        };
+        await this.imagesRepository.save(imageDao);
+      }
+
+      const final = await this.productsRepository.findOne({
+        where: {
+          productId: res.productId,
+        },
+        relations: { images: true },
+      });
+
+      return final;
     } catch (error) {
       throw error;
     }

@@ -24,7 +24,7 @@ export class Image {
 
   @Column()
   @PrimaryGeneratedColumn('uuid')
-  ImageId?: UUID;
+  imageId?: UUID;
 
   @Column({ type: 'varchar', length: 255, default: null })
   url?: string;

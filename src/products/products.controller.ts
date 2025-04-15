@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
+import { ProductDto } from './dto/add-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -43,5 +44,15 @@ export class ProductsController {
   async getAllProducts() {
     var res = await this.productsService.getAllProducts();
     return { products: res };
+  }
+
+  @ApiOperation({
+    summary: 'Add Product',
+    description: 'Add product',
+  })
+  @Post()
+  async addProduct(@Body() dto: ProductDto, @Req() req: Request) {
+    var res = await this.productsService.addProduct(dto);
+    return { product: res };
   }
 }

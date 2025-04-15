@@ -48,17 +48,18 @@ export class Product {
     type: 'enum',
     enum: StyleTypes,
     nullable: true,
+    default: null,
   })
-  itemStyle: StyleTypes;
+  productStyle?: StyleTypes;
 
   @Column({ type: 'numeric', nullable: false })
   price: number;
 
   @Column({ type: 'varchar', length: 500, default: null })
-  itemDescription?: string;
+  productDescription?: string;
 
   @Column({ type: 'numeric', nullable: true })
-  weight: number;
+  weight?: number;
 
   @Column({ type: 'smallint', nullable: true, default: 1 })
   status?: number;
@@ -70,5 +71,5 @@ export class Product {
   updatedAt?: Date;
 
   @OneToMany(() => Image, (image) => image.product)
-  images: Image[];
+  images?: Image[];
 }
