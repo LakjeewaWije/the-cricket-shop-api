@@ -4,10 +4,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import { initializeTransactionalContext } from 'typeorm-transactional';
 
 async function bootstrap() {
+  initializeTransactionalContext();
   const app = await NestFactory.create(AppModule);
-
   // register swagger api
   const config = new DocumentBuilder()
     .setTitle('The Cricket Shop')

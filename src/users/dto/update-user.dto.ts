@@ -29,6 +29,11 @@ export class UpdateUserDto {
   @IsString()
   @IsOptional()
   @ApiProperty()
+  eircode: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
   oldPassword: string;
 
   @IsString()

@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { UUID } from 'crypto';
+import { Order } from 'src/orders/entity/order.entity';
 import {
   Column,
   CreateDateColumn,
@@ -61,4 +62,7 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt?: Date;
+
+  @OneToMany(() => Order, (order) => order.user)
+  orders?: Order[];
 }

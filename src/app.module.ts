@@ -11,6 +11,9 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/http-exception.filter';
 import { SuccessResponseFilter } from './utils/success-response.filter';
 import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
+import { addTransactionalDataSource } from 'typeorm-transactional';
+import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -34,11 +37,19 @@ import { ProductsModule } from './products/products.module';
           timezone: 'UTC',
         },
       }),
+      async dataSourceFactory(options) {
+        if (!options) {
+          throw new Error('Invalid options passed');
+        }
+
+        return addTransactionalDataSource(new DataSource(options));
+      },
       inject: [ConfigService],
     }),
     UsersModule,
     AuthsModule,
     ProductsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [
