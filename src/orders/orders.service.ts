@@ -77,4 +77,32 @@ export class OrdersService {
       throw error;
     }
   }
+
+  async getAllOrders(userId: UUID): Promise<Order[]> {
+    try {
+      const res = await this.ordersRepository.find({
+        where: { user: { userId } },
+        relations: { orderToProducts: { product: true } },
+      });
+
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getOrderByOrderId(id: UUID): Promise<Order | any> {
+    try {
+      const res = await this.ordersRepository.findOne({
+        where: { orderId: id },
+        relations: {
+          orderToProducts: { product: true },
+        },
+      });
+
+      return res;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

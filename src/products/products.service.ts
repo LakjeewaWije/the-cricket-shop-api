@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductDto } from './dto/add-product.dto';
 import { Image } from './entity/image.entity';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class ProductsService {
@@ -107,6 +108,18 @@ export class ProductsService {
       });
 
       return final;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getProductByProductId(id: UUID): Promise<Product | any> {
+    try {
+      const res = await this.productsRepository.findOne({
+        where: { productId: id },
+      });
+
+      return res;
     } catch (error) {
       throw error;
     }
