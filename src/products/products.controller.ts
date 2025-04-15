@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { ProductDto } from './dto/add-product.dto';
 import { Public } from 'src/utils/publicRequest.decorator';
 import { UUID } from 'crypto';
+import { GetProductQueryDto } from './query/get-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -67,5 +68,16 @@ export class ProductsController {
   async getProductByProductId(@Param('productId') productId: UUID) {
     var res = await this.productsService.getProductByProductId(productId);
     return { product: res };
+  }
+
+  @ApiOperation({
+    summary: 'Get all products filter',
+    description: 'Get all products filter',
+  })
+  @Public()
+  @Get('/get/filter')
+  async getAllFilter(@Query() queryParams: GetProductQueryDto) {
+    var res = await this.productsService.getAllProductsFilter(queryParams);
+    return res;
   }
 }

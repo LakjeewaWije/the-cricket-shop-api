@@ -5,10 +5,11 @@ import { CategoryTypes } from './enum/categoryTypes.enum';
 import { StyleTypes } from './enum/styleTypes.enum';
 import { Product } from './entity/product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, FindManyOptions, Repository } from 'typeorm';
 import { ProductDto } from './dto/add-product.dto';
 import { Image } from './entity/image.entity';
 import { UUID } from 'crypto';
+import { GetProductQueryDto } from './query/get-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -123,5 +124,54 @@ export class ProductsService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async getAllProductsFilter(
+    queryParams?: GetProductQueryDto,
+  ): Promise<{ products: Product[]; totalCount: number }> {
+    const options: FindManyOptions<Product> = {};
+    console.log('mannnnn firsttttt');
+    if (queryParams) {
+      if (queryParams.productBrand) {
+        options.where = {
+          ...options.where,
+          productBrand: queryParams.productBrand,
+        };
+      }
+
+      if (queryParams.productCategory) {
+        options.where = {
+          ...options.where,
+          productCategory: queryParams.productCategory,
+        };
+      }
+
+      if (queryParams.productStyle) {
+        options.where = {
+          ...options.where,
+          productStyle: queryParams.productStyle,
+        };
+      }
+
+      // Apply sorting based on query parameter
+      // if (queryParams.sort) {
+      //   const [sortField, sortOrder] = queryParams.sort.split(',');
+      //   options.order = { [sortField]: sortOrder.toUpperCase() };
+      // }
+
+      if (queryParams.pageNumber && queryParams.pageSize) {
+        const { pageNumber, pageSize } = queryParams;
+        const skip = (pageNumber - 1) * pageSize;
+        options.skip = skip;
+        options.take = pageSize;
+      }
+    }
+
+    const [products, totalCount] = await Promise.all([
+      this.productsRepository.find(options),
+      this.productsRepository.count(options),
+    ]);
+
+    return { products: products, totalCount };
   }
 }
