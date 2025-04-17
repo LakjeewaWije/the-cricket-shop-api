@@ -118,6 +118,7 @@ export class ProductsService {
     try {
       const res = await this.productsRepository.findOne({
         where: { productId: id },
+        relations: { images: true },
       });
 
       return res;
