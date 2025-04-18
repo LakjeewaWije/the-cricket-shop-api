@@ -9,6 +9,7 @@ import { initializeTransactionalContext } from 'typeorm-transactional';
 async function bootstrap() {
   initializeTransactionalContext();
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   // register swagger api
   const config = new DocumentBuilder()
     .setTitle('The Cricket Shop')

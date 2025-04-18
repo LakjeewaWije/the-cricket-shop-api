@@ -130,7 +130,9 @@ export class ProductsService {
   async getAllProductsFilter(
     queryParams?: GetProductQueryDto,
   ): Promise<{ products: Product[]; totalCount: number }> {
-    const options: FindManyOptions<Product> = {};
+    const options: FindManyOptions<Product> = {
+      relations: { images: true },
+    };
     console.log('mannnnn firsttttt');
     if (queryParams) {
       if (queryParams.productBrand) {
