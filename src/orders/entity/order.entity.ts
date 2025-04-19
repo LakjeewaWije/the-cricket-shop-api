@@ -41,7 +41,7 @@ export class Order {
   recipientMobilePhone: string;
 
   @Index()
-  @Column({ type: 'varchar', default: null })
+  @Column({ type: 'varchar',length: 8, default: null })
   recipientEircode: string;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
