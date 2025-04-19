@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { Order } from './entity/order.entity';
 import { User } from 'src/users/entity/user.entity';
 import { OrderToProduct } from './entity/orderToProduct.entity';
+import { MailerService } from '../mailer/mailer.service';
 
 @Injectable()
 export class OrdersService {
@@ -20,6 +21,7 @@ export class OrdersService {
     private usersRepository: Repository<User>,
     @InjectRepository(OrderToProduct)
     private orderToProductRepository: Repository<OrderToProduct>,
+    private readonly mailerService: MailerService,
   ) {}
 
   @Transactional()
@@ -33,7 +35,6 @@ export class OrdersService {
       if (!getUser) throw new NotFoundException('User Not Found');
 
       // add order
-
       const orderDao: Order = {
         user: getUser,
         recipientFirstName: dto.recipientFirstName,
@@ -71,6 +72,18 @@ export class OrdersService {
         where: { orderId: orderRes.orderId },
         relations: { user: true, orderToProducts: { product: true } },
       });
+
+      // Send email to the user after the order is placed, using emailAddress
+      if (getUser.emailAddress) {
+        await this.mailerService.sendOrderConfirmationEmail(
+          getUser.emailAddress,
+          res[0],
+        );
+      } else {
+        console.warn(
+          'User email address not found, skipping email notification',
+        );
+      }
 
       return res;
     } catch (error) {

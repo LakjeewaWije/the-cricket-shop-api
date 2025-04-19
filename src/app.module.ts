@@ -14,6 +14,7 @@ import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 import { DataSource } from 'typeorm';
+import { MailerModule } from './mailer/mailer.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { DataSource } from 'typeorm';
     AuthsModule,
     ProductsModule,
     OrdersModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [
